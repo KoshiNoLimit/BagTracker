@@ -3,11 +3,13 @@ from django.contrib.auth.models import User
 
 
 class Desk(models.Model):
+    """доска с заданиями"""
     title = models.CharField(max_length=30)
     team = models.ManyToManyField(User)
 
 
 class Task(models.Model):
+    """задание"""
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     desk = models.ForeignKey(Desk, on_delete=models.CASCADE)
     content = models.TextField(max_length=200)
@@ -18,10 +20,7 @@ class Task(models.Model):
 
 
 class Comment(models.Model):
+    """комментарий к заданию"""
     content = models.CharField(max_length=200)
     author = models.CharField(max_length=150)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-
-
-
-# Добавить комментарии

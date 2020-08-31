@@ -13,6 +13,7 @@ from .models import Desk, Task, Comment
 
 
 class Register(View):
+    """Вью для регистрации"""
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('home')
@@ -33,6 +34,7 @@ class Register(View):
 
 
 class Login(View):
+    """Вью для входа пользователя в систему"""
     def get(self, request):
         if request.user.is_authenticated:
             return redirect('home')
@@ -53,12 +55,14 @@ class Login(View):
 
 
 class Logout(View):
+    """Вью для выхода пользователя из системы"""
     def get(self, request):
         logout(request)
         return redirect('login')
 
 
 class Home(LoginRequiredMixin, ListView):
+    """Вью для взаимодействия с домашней страницей"""
     model = Desk
     template_name = 'home.html'
 
@@ -78,8 +82,11 @@ class Home(LoginRequiredMixin, ListView):
 
 
 class DeskView(LoginRequiredMixin, View):
+    """Вью для взаимодействия с доской заданий"""
     def get(self, request, pk):
         desk = Desk.objects.get(id=pk)
+        if request.user not in desk.team.all():
+            return redirect('home')
         tasks = Task.objects.filter(desk=desk)
         tasks0 = tasks.filter(progress=0)
         tasks1 = tasks.filter(progress=1)
@@ -116,8 +123,11 @@ class DeskView(LoginRequiredMixin, View):
 
 
 class TaskView(LoginRequiredMixin, View):
+    """Вью для взаимодействия с заданиями"""
     def get(self, request, dpk, tpk):
         desk = Desk.objects.get(id=dpk)
+        if request.user not in desk.team.all():
+            return redirect('home')
         task = Task.objects.get(id=tpk)
         comments = Comment.objects.filter(task=task)
         context = {'desk': desk, 'task': task, 'comments': comments}
