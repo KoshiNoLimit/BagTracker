@@ -1,0 +1,191 @@
+<html lang="en">
+<head>
+    <style>
+        .card-father {
+            width: 20rem;
+        }
+    </style>
+    <meta charset="utf-8">
+    <title>Desk</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+
+<body class="vsc-initialized">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href=#>Tracker</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </div>
+
+            <div class="navbar-nav ml-md-auto">
+                <span class="navbar-text">{{ request.user }}</span>
+                <a href="{% url 'logout' %}" class="btn btn-light mb-3 mb-md-0 ml-md-3">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<main role="main" class="container-fluid">
+    <p class="m-3" style="font-size: 20pt">
+        {{ desk.title }}
+    </p>
+    <div class="row">
+        <div class="col">
+            <div class="card-deck" style="max-width: 70rem">
+                <div class="card bg-light mb-3">
+                    <div class="card-header">New</div>
+                    <div class="card-body">
+                        {% for task in tasks0 %}
+                            <a type="button" class="btn btn-outline-{{ task.colors }} mt-2" href="{% url 'task' desk.id task.id %}" style="width: 100%;">
+                                {{ task.content }}
+                            </a>
+                        {% endfor %}
+                        <button type="button" class="btn btn-outline-dark mt-2" data-toggle="modal"
+                                data-target="#newTaskModal"
+                                style="width: 100%; font-size: 24pt;">+
+                        </button>
+                    </div>
+                </div>
+                <div class="card bg-light mb-3">
+                    <div class="card-header">In progress</div>
+                    <div class="card-body">
+                        {% for task in tasks1 %}
+                            <a type="button" class="btn btn-outline-{{ task.colors }} mt-2" href="{% url 'task' desk.id task.id %}" style="width: 100%;">
+                                {{ task.content }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="card bg-light mb-3">
+                    <div class="card-header">Done</div>
+                    <div class="card-body">
+                        {% for task in tasks2 %}
+                            <a type="button" class="btn btn-outline-{{ task.colors }} mt-2" href="{% url 'task' desk.id task.id %}" style="width: 100%;">
+                                {{ task.content }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <div class="card text-white bg-dark mb-3" style="max-width: 18rem;">
+                <div class="card-header">Team</div>
+                <div class="card-body">
+                    {% for man in desk.team.all %}
+                        <p>{{ man.username }}</p>
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-light mr-2" data-toggle="modal"
+                            data-target="#addTeamModal">Add
+                    </button>
+                    <form method="POST" action="" style="display: inline">
+                        {% csrf_token %}
+                        <button type="submit" name="leave" class="btn btn-outline-secondary">Leave</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="newTaskModal" tabindex="-1" role="dialog" aria-labelledby="newTaskModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form class="m-3" method="POST" action="" name="push_task">
+                    {% csrf_token %}
+
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" id="materialInline1"
+                               name="color" value="danger">
+                        <label class="form-check-label" for="materialInline1">Red</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" id="materialInline2"
+                               name="color" value="success">
+                        <label class="form-check-label" for="materialInline2">Green</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" class="form-check-input" id="materialInline3"
+                               name="color" checked value="info">
+                        <label class="form-check-label" for="materialInline3">Blue</label>
+                    </div>
+
+                    <textarea name="task_text" placeholder="Description..." class="form-control" id="Textarea1"
+                              rows="3"></textarea>
+                    <button type="submit" class="btn btn-dark mt-2">Add the task</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="detailTaskModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Title</h5>
+                </div>
+                <div class="modal-body">
+                    <textarea name="comment_text" placeholder="Comment..." class="form-control" id="Textarea2"
+                              rows="1"></textarea>
+                    <button type="submit" class="btn btn-dark mt-2">Push</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addTeamModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add a teammate</h5>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline mt-2 mt-md-0" method="POST" action="">
+                        {% csrf_token %}
+                        <input class="form-control" name="username" type="text" placeholder="Username..."
+                               aria-label="Search">
+                        <button class="btn btn-dark ml-2" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+<script>
+    $('#detailTaskModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var task_id = button.data('whatever') // Extract info from data-* attributes
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this)
+        modal.find('.modal-title').text()
+    })
+</script>
+</body>
+</html>

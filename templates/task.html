@@ -1,0 +1,86 @@
+<html lang="en">
+<head>
+    <style>
+        .card-father {
+            width: 20rem;
+        }
+    </style>
+    <meta charset="utf-8">
+    <title>Desk</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+
+<body class="vsc-initialized">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href=#>Tracker</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </div>
+            <div class="navbar-nav">
+                <a class="nav-link" href="{% url 'desk' desk.id %}">Desk</a>
+            </div>
+
+            <div class="navbar-nav ml-md-auto">
+                <span class="navbar-text">{{ request.user }}</span>
+                <a href="{% url 'logout' %}" class="btn btn-light mb-3 mb-md-0 ml-md-3">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<main role="main" class="container">
+    <div class="card border-{{ task.colors }} mb-3 m-3">
+        <div class="card-header">
+            {{ task.content }}
+            {% if task.progress < 2 %}
+                <form class="float-sm-right" method="POST" action="" style="display: inline">
+                    {% csrf_token %}
+                    <button type="submit" name="progress" class="btn btn-outline-secondary">Progress</button>
+                </form>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            {% for comment in comments %}
+                <div class="row" style="width: 100%;">
+                    <div class="m-2">
+                        <h5 class="text-primary">
+                            {{ comment.author }}
+                        </h5>
+                        <p class="text">{{ comment.content }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="card-footer">
+            <form class="form-inline mt-2 mt-md-0" method="POST" action="">
+                {% csrf_token %}
+                <input class="form-control" name="new_comment" type="text" placeholder="Comment..."
+                       aria-label="Search">
+                <button class="btn btn-dark ml-2" type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+
+</main>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+</body>
+</html>
