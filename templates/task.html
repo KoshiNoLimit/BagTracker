@@ -39,7 +39,7 @@
 
 
 <main role="main" class="container">
-    <div class="card border-{{ task.colors }} mb-3 m-3">
+    <div class="card border-{{ task.colors }} mb-3 m-3 h-75">
         <div class="card-header">
             {{ task.content }}
             {% if task.progress < 2 %}
@@ -49,17 +49,19 @@
                 </form>
             {% endif %}
         </div>
-        <div class="card-body">
-            {% for comment in comments %}
-                <div class="row" style="width: 100%;">
-                    <div class="m-2">
-                        <h5 class="text-primary">
-                            {{ comment.author }}
-                        </h5>
-                        <p class="text">{{ comment.content }}</p>
+        <div class="overflow-auto h-100">
+            <div class="card-body">
+                {% for comment in comments %}
+                    <div class="row" style="width: 100%;">
+                        <div class="m-2">
+                            <h5 class="text-primary">
+                                {{ comment.author }}
+                            </h5>
+                            <p class="text">{{ comment.content }}</p>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
         <div class="card-footer">
             <form class="form-inline mt-2 mt-md-0" method="POST" action="">
