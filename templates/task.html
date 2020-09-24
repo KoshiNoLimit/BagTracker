@@ -39,23 +39,29 @@
 
 
 <main role="main" class="container">
-    <div class="card border-{{ task.colors }} mb-3 m-3 h-75">
+    <div class="card border-{{ task.colors }} mb-3 m-3" style="height: 90%">
         <div class="card-header">
-            {{ task.content }}
-            {% if task.progress < 2 %}
-                <form class="float-sm-right" method="POST" action="" style="display: inline">
-                    {% csrf_token %}
-                    <button type="submit" name="progress" class="btn btn-outline-secondary">Progress</button>
-                </form>
-            {% endif %}
+            <p><a class="font-weight-bold text-{{ task.colors }}"> Title: </a> {{ task.content }} <a class="float-sm-right text-secondary">{{ task.time }}</a></p>
+            <p><a class="font-weight-bold text-{{ task.colors }}"> Description: </a> {{ task.text }} </p>
+            <p><a class="font-weight-bold text-{{ task.colors }}"> Type: </a> {{ tag }} </p>
+            <form class="form-inline" method="POST" action="" style="display: inline">
+                <a class="font-weight-bold text-{{ task.colors }}"> Executors: </a>
+                {% for exec in executors %}
+                    {{ exec.username }},
+                {% endfor %}
+                {% csrf_token %}
+                <button type="button" name="add_executor" class="btn btn-outline-secondary btn-sm" data-toggle="modal"
+                        data-target="#addExecutorModal">+</button>
+            </form>
         </div>
         <div class="overflow-auto h-100">
             <div class="card-body">
                 {% for comment in comments %}
                     <div class="row" style="width: 100%;">
                         <div class="m-2">
-                            <h5 class="text-primary">
+                            <h5 class="text-{{ task.colors }}">
                                 {{ comment.author }}
+                                <a class="text-secondary">{{ comment.time }}</a>
                             </h5>
                             <p class="text">{{ comment.content }}</p>
                         </div>
@@ -64,12 +70,42 @@
             </div>
         </div>
         <div class="card-footer">
-            <form class="form-inline mt-2 mt-md-0" method="POST" action="">
+        <div class="row">
+            <div class="col">
+            <form class="form-inline" method="POST" action="">
                 {% csrf_token %}
                 <input class="form-control" name="new_comment" type="text" placeholder="Comment..."
                        aria-label="Search">
                 <button class="btn btn-dark ml-2" type="submit">Submit</button>
             </form>
+            </div>
+            {% if task.progress < 2 %}
+                <div class="col">
+                <form class="float-sm-right ml-2" method="POST" action="" style="display: inline">
+                    {% csrf_token %}
+                    <button type="submit" name="progress" class="btn btn-outline-secondary">Progress</button>
+                </form>
+                </div>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+
+    <div class="modal" id="addExecutorModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add an executor</h5>
+                </div>
+                <div class="modal-body">
+                    <form class="form-inline mt-2 mt-md-0" method="POST" action="">
+                        {% csrf_token %}
+                        <input class="form-control" name="new_executor" type="text" placeholder="Username..."
+                               aria-label="Search">
+                        <button class="btn btn-dark ml-2" type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 

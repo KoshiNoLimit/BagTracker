@@ -46,7 +46,8 @@
                     <div class="card-header">New</div>
                     <div class="card-body">
                         {% for task in tasks0 %}
-                            <a type="button" class="btn btn-outline-{{ task.colors }} mt-2" href="{% url 'task' desk.id task.id %}" style="width: 100%;">
+                            <a type="button" class="btn btn-outline-{{ task.colors }} mt-2"
+                               href="{% url 'task' desk.id task.id %}" style="width: 100%;">
                                 {{ task.content }}
                             </a>
                         {% endfor %}
@@ -60,7 +61,8 @@
                     <div class="card-header">In progress</div>
                     <div class="card-body">
                         {% for task in tasks1 %}
-                            <a type="button" class="btn btn-outline-{{ task.colors }} mt-2" href="{% url 'task' desk.id task.id %}" style="width: 100%;">
+                            <a type="button" class="btn btn-outline-{{ task.colors }} mt-2"
+                               href="{% url 'task' desk.id task.id %}" style="width: 100%;">
                                 {{ task.content }}
                             </a>
                         {% endfor %}
@@ -70,7 +72,8 @@
                     <div class="card-header">Done</div>
                     <div class="card-body">
                         {% for task in tasks2 %}
-                            <a type="button" class="btn btn-outline-{{ task.colors }} mt-2" href="{% url 'task' desk.id task.id %}" style="width: 100%;">
+                            <a type="button" class="btn btn-outline-{{ task.colors }} mt-2"
+                               href="{% url 'task' desk.id task.id %}" style="width: 100%;">
                                 {{ task.content }}
                             </a>
                         {% endfor %}
@@ -110,21 +113,21 @@
                     <div class="form-check form-check-inline">
                         <input type="radio" class="form-check-input" id="materialInline1"
                                name="color" value="danger">
-                        <label class="form-check-label" for="materialInline1">Red</label>
+                        <label class="form-check-label" for="materialInline1">Error</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input type="radio" class="form-check-input" id="materialInline2"
                                name="color" value="success">
-                        <label class="form-check-label" for="materialInline2">Green</label>
+                        <label class="form-check-label" for="materialInline2">Idea</label>
                     </div>
                     <div class="form-check form-check-inline">
                         <input type="radio" class="form-check-input" id="materialInline3"
                                name="color" checked value="info">
-                        <label class="form-check-label" for="materialInline3">Blue</label>
+                        <label class="form-check-label" for="materialInline3">Weak</label>
                     </div>
-
-                    <textarea name="task_text" placeholder="Description..." class="form-control" id="Textarea1"
-                              rows="3"></textarea>
+                        <input name="task_title" placeholder="Title..." class="form-control" id="Textarea1">
+                        <textarea name="task_text" placeholder="Description..." class="form-control" id="Textarea2"
+                                  rows="3"></textarea>
                     <button type="submit" class="btn btn-dark mt-2">Add the task</button>
                 </form>
             </div>

@@ -18,12 +18,13 @@ class CreateUserForm(UserCreationForm):
 
 class AddDeskForm(forms.Form):
     """форма добавления доски заданий"""
-    deskname = forms.CharField(label='deskname', min_length=3, max_length=20)
+    deskname = forms.CharField(label='deskname', min_length=3, max_length=50)
 
 
 class AddTaskForm(forms.Form):
     """форма добавления задания"""
-    task_text = forms.CharField(label='task_text', min_length=5, max_length=200)
+    task_text = forms.CharField(label='task_text', min_length=5, max_length=1000)
+    task_title = forms.CharField(label='task_title', min_length=5, max_length=200)
     color = forms.CharField(label='color', validators=[validate_process])
 
 

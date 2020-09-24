@@ -9,7 +9,8 @@ from .forms import CreateUserForm, AddDeskForm, AddTaskForm, AddCommentForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.views.generic import ListView
-from .models import Desk, Task, Comment
+from .models import Desk
+from .models import Task, Comment
 
 
 class Register(View):
@@ -96,12 +97,16 @@ class DeskView(LoginRequiredMixin, View):
 
     @csrf_exempt
     def post(self, request, pk):
-        if 'task_text' in request.POST:
+        if 'color' in request.POST:
             form = AddTaskForm(request.POST)
             if form.is_valid():
                 desk = Desk.objects.get(id=pk)
-                new_task = Task.objects.create(content=form.cleaned_data.get('task_text'), author=request.user,
-                                               desk=desk, colors=form.cleaned_data.get('color'))
+                new_task = Task.objects.create(
+                    content=form.cleaned_data.get('task_title'),
+                    text=form.cleaned_data.get('task_text'),
+                    author=request.user,
+                    desk=desk, colors=form.cleaned_data.get('color')
+                )
                 new_task.save()
                 return redirect('desk', pk)
 
@@ -110,7 +115,6 @@ class DeskView(LoginRequiredMixin, View):
             desk = Desk.objects.get(id=pk)
             user = User.objects.get(username=username)
             if user is not None:
-                print('add teammate')
                 desk.team.add(user)
                 desk.save()
             return redirect('desk', pk)
@@ -130,7 +134,8 @@ class TaskView(LoginRequiredMixin, View):
             return redirect('home')
         task = Task.objects.get(id=tpk)
         comments = Comment.objects.filter(task=task)
-        context = {'desk': desk, 'task': task, 'comments': comments}
+        executors = User.objects.filter(executor=task)
+        context = {'desk': desk, 'task': task, 'tag': dict(task.COLOR_CHOICES).get(task.colors), 'comments': comments, 'executors': executors}
         return render(request, 'task.html', context)
 
     @csrf_exempt
@@ -148,3 +153,11 @@ class TaskView(LoginRequiredMixin, View):
             task.progress += 1
             task.save()
             return redirect('desk', dpk)
+        elif 'new_executor' in request.POST:
+            username = request.POST.get('new_executor')
+            task = Task.objects.get(id=tpk)
+            user = User.objects.get(username=username)
+            if user is not None:
+                task.executor.add(user)
+                task.save()
+            return redirect('task', dpk, tpk)
